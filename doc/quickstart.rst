@@ -10,6 +10,28 @@ and that you have already installed both Flask and Flask-RESTX.
 If not, then follow the steps in the :ref:`installation` section.
 
 
+Migrate from Flask-RESTPlus
+---------------------------
+
+.. warning:: The *migration* commands provided bellow are here for the illustration.
+             You may need to adapt them to properly fit your needs.
+             We also recommend you make a backup of your project prior running them.
+
+At this point, Flask-RESTX remains 100% compatible with Flask-RESTPlus' API.
+All you need to do is update your requirements to use Flask-RESTX instead of
+Flask-RESTPlus. Then you need to update all your imports.
+This can be done using something like:
+
+::
+   find . -type f -name "*.py" | xargs sed -i "s/flask_restplus/flask_restx/g"
+
+Finally, you will need to update your configuration options (described `here
+<quickstart.html#configuration>`_). Example:
+
+::
+   find . -type f -name "*.py" | xargs sed -i "s/RESTPLUS_/RESTX_/g"
+
+
 Initialization
 --------------
 
@@ -306,6 +328,48 @@ parameter to some classes or function to force order preservation:
 - globally on :class:`Namespace`: ``ns = Namespace(ordered=True)``
 - locally on :func:`marshal`: ``return marshal(data, fields, ordered=True)``
 
+Configuration
+-------------
+
+The following configuration options exist for Flask-RESTX:
+
+============================ =============== ==================================
+    OPTION                    DEFAULT VALUE             DESCRIPTION
+============================ =============== ==================================
+``BUNDLE_ERRORS``               ``False``     Bundle all the validation errors
+                                              instead of returning only the
+                                              first one encountered.
+                                              See the `Error Handling
+                                              <parsing.html#error-handling>`__
+                                              section of the documentation for
+                                              details.
+``RESTX_VALIDATE``              ``False``     Whether to enforce payload
+                                              validation by default when using
+                                              the ``@api.expect()`` decorator.
+                                              See the `@api.expect()
+                                              <swagger.html#the-api-expect-decorator>`__
+                                              documentation for details.
+``RESTX_MASK_HEADER``         ``X-Fields``    Choose the name of the *Header*
+                                              that will contain the masks to
+                                              apply to your answer.
+                                              See the `Fields masks <mask.html>`__
+                                              documentation for details.
+``RESTX_MASK_SWAGGER``          ``True``      Whether to enable the mask
+                                              documentation in your swagger or
+                                              not.
+                                              See the `mask usage
+                                              <mask.html#usage>`__ documentation
+                                              for details.
+``RESTX_INCLUDE_ALL_MODELS``     ``False``    This option allows you to include
+                                              all defined models in the generated
+                                              Swagger documentation, even if they
+                                              are not explicitly used in either
+                                              ``expect`` nor ``marshal_with``
+                                              decorators.
+``RESTX_JSON``                   ``{}``       Dictionary of options to pass to
+                                              the json *serializer* (by default
+                                              ``json.dumps``).
+============================ =============== ==================================
 
 Full example
 ------------
